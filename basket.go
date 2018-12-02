@@ -31,7 +31,7 @@ func createHTTPRouter(f handlers.ToHandlerHOF) *mux.Router {
 
 // getHomePageHandler : show the homepage form
 func getHomePageHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	tmpl := templates.Lookup("homepage.tmpl")
+	tmpl := templates.Lookup("stripe.tmpl")
 	tmpl.Execute(w, map[string]interface{}{
 		"Key":            publishableKey,
 		csrf.TemplateTag: csrf.TemplateField(r),
