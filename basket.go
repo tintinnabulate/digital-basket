@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
@@ -31,7 +32,10 @@ func createHTTPRouter(f handlers.ToHandlerHOF) *mux.Router {
 // getHomePageHandler : show the homepage form
 func getHomePageHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	tmpl := templates.Lookup("homepage.tmpl")
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, map[string]interface{}{
+		"Key":            publishableKey,
+		csrf.TemplateTag: csrf.TemplateField(r),
+	})
 }
 
 // postHomePageHandler : handle POST on homepage
@@ -51,7 +55,10 @@ func postHomePageHandler(ctx context.Context, w http.ResponseWriter, r *http.Req
 		showPaymentForm()
 	} else {
 		tmpl := templates.Lookup("homepage.tmpl")
-		tmpl.Execute(w, nil)
+		tmpl.Execute(w, map[string]interface{}{
+			"Key":            publishableKey,
+			csrf.TemplateTag: csrf.TemplateField(r),
+		})
 	}
 }
 
@@ -168,4 +175,15 @@ func init() {
 	schemaDecoderInit()
 	routerInit()
 	stripeInit()
+}
+
+func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("Defaulting to port %s", port)
+	}
+
+	log.Printf("Listening on port %s", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }

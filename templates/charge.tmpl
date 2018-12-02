@@ -1,0 +1,30 @@
+<html>
+<body>
+<form action="/charge" method="post" class="payment">
+{{ .csrfField }}
+            <div class="row">
+              <div class="col-md-6 mb-3">
+
+  <article>
+    <label class="amount">
+      <span>2.00</span>
+    </label>
+  </article>
+
+              </div>
+            </div>
+
+            <hr class="mb-4">
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="{{ .Key }}"
+    data-description="Meeting contribution"
+    data-amount="200"
+	data-currency="GBP"
+    data-locale="auto"
+	data-zip-code="true"></script>
+          </form>
+        </div>
+      </div>
+
+	  </body>
+</html>

@@ -43,3 +43,23 @@ func TestGetHomePage(t *testing.T) {
 		})
 	})
 }
+
+func TestPostHomePage(t *testing.T) {
+	ctx, inst := testers.GetTestingContext()
+	defer inst.Close()
+
+	c.Convey("When you post at the root URL", t, func() {
+		r := createHTTPRouter(handlers.ToHTTPHandlerConverter(ctx))
+		record := httptest.NewRecorder()
+
+		req, err := http.NewRequest("POST", "/", nil)
+
+		c.So(err, c.ShouldBeNil)
+
+		c.Convey("The next page body should contain \"Charge successful\"", func() {
+			r.ServeHTTP(record, req)
+			c.So(record.Code, c.ShouldEqual, http.StatusOK)
+			c.So(fmt.Sprint(record.Body), c.ShouldContainSubstring, `Charge successful`)
+		})
+	})
+}
