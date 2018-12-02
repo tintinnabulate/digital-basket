@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
@@ -175,15 +174,4 @@ func init() {
 	schemaDecoderInit()
 	routerInit()
 	stripeInit()
-}
-
-func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-		log.Printf("Defaulting to port %s", port)
-	}
-
-	log.Printf("Listening on port %s", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
