@@ -112,8 +112,8 @@ type Config struct {
 	IsLiveSite           bool   `id:"IsLiveSite"           default:"false"`
 	StripePublishableKey string `id:"StripePublishableKey" default:"pk_live_foo"`
 	StripeSecretKey      string `id:"StripeSecretKey"      default:"sk_live_foo"`
-	StripeTestPK         string `id:"StripeTestPK"         default:"pk_test_UdWbULsYzTqKOob0SHEsTNN2"`
-	StripeTestSK         string `id:"StripeTestSK"         default:"rk_test_xR1MFQcmds6aXvoDRKDD3HdR"`
+	StripeTestPK         string `id:"StripeTestPK"         default:"pk_test_0n2vG3eX9wKGhKiB8hG0EhX2"`
+	StripeTestSK         string `id:"StripeTestSK"         default:"rk_test_DXjSgrVJkA90FuBfu8NNf47H"`
 }
 
 var (
