@@ -175,7 +175,3 @@ func init() {
 	routerInit()
 	stripeInit()
 }
-
-func main() {
-	http.ListenAndServe(":8080", nil)
-}
