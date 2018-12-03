@@ -10,7 +10,7 @@ Notes
 
 Stripe takes a per-transaction fee of 1.4% + 20p (at the time of this writing, 2018-12-03).
 
-The payee must enter their email address and card details every time they wish to make a contribution, *unless* they tick the box "Remember me". If the payee ticks the box "Remember me", a cookie is stored on their device by Stripe which is used to recall their card details, so they needonly click "Pay" to pay.
+The payee must enter their email address and card details every time they wish to make a contribution, *unless* they tick the box "Remember me". If the payee ticks the box "Remember me", a cookie is stored on their device by Stripe which is used to recall their card details, so they need only click "Pay" to pay.
 
 PCI compliance
 --------------
