@@ -8,7 +8,6 @@ import (
 
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/schema"
 	"github.com/stripe/stripe-go"
 	stripeClient "github.com/stripe/stripe-go/client"
 	"github.com/tintinnabulate/aecontext-handlers/handlers"
@@ -23,7 +22,6 @@ import (
 func createHTTPRouter(f handlers.ToHandlerHOF) *mux.Router {
 	appRouter := mux.NewRouter()
 	appRouter.HandleFunc("/", f(getHomePageHandler)).Methods("GET")
-	appRouter.HandleFunc("/", f(postHomePageHandler)).Methods("POST")
 	appRouter.HandleFunc("/charge", f(postChargeHandler)).Methods("POST")
 	return appRouter
 }
@@ -37,34 +35,7 @@ func getHomePageHandler(ctx context.Context, w http.ResponseWriter, r *http.Requ
 	})
 }
 
-// postHomePageHandler : handle POST on homepage
-func postHomePageHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		http.Error(w, fmt.Sprintf("could not parse form: %v", err), http.StatusInternalServerError)
-		return
-	}
-	var q qualifier
-	err = schemaDecoder.Decode(&q, r.PostForm)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("could not encode tickbox: %v", err), http.StatusInternalServerError)
-		return
-	}
-	if q.is_alkie {
-		showPaymentForm()
-	} else {
-		tmpl := templates.Lookup("homepage.tmpl")
-		tmpl.Execute(w, map[string]interface{}{
-			"Key":            publishableKey,
-			csrf.TemplateTag: csrf.TemplateField(r),
-		})
-	}
-}
-
-func showPaymentForm() {
-}
-
-// postRegistrationFormPaymentHandler : charge the customer, and create a User in the User table
+// postChargeHandler : charge the customer
 func postChargeHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -98,11 +69,10 @@ func postChargeHandler(ctx context.Context, w http.ResponseWriter, r *http.Reque
 		return
 	}
 	tmpl := templates.Lookup("payment_successful.tmpl")
-	tmpl.Execute(w, nil)
-}
-
-type qualifier struct {
-	is_alkie bool
+	tmpl.Execute(w, map[string]interface{}{
+		"Key":            publishableKey,
+		csrf.TemplateTag: csrf.TemplateField(r),
+	})
 }
 
 // Config is our configuration file format
@@ -116,12 +86,12 @@ type Config struct {
 }
 
 var (
-	schemaDecoder  *schema.Decoder
 	publishableKey string
 	templates      *template.Template
 	config         Config
 )
 
+// configInit : initialise our config with the given config filename
 func configInit(configName string) {
 	err := gonfig.Load(&config, gonfig.Conf{
 		FileDefaultFilename: configName,
@@ -134,15 +104,8 @@ func configInit(configName string) {
 	}
 }
 
-// schemaDecoderInit : create the schema decoder for decoding req.PostForm
-func schemaDecoderInit() {
-	schemaDecoder = schema.NewDecoder()
-	schemaDecoder.IgnoreUnknownKeys(true)
-}
-
 // routerInit : initialise our CSRF protected HTTPRouter
 func routerInit() {
-	// TODO: https://youtu.be/xyDkyFjzFVc?t=1308
 	router := createHTTPRouter(handlers.ToHTTPHandler)
 	csrfProtector := csrf.Protect(
 		[]byte(config.CSRFKey),
@@ -171,7 +134,6 @@ func templatesInit() {
 func init() {
 	configInit("config.json")
 	templatesInit()
-	schemaDecoderInit()
 	routerInit()
 	stripeInit()
 }
