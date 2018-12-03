@@ -1,10 +1,12 @@
-# digital-basket
+digital-basket
+==============
 
 [![Build Status](https://travis-ci.org/tintinnabulate/digital-basket.svg?branch=master)](https://travis-ci.org/tintinnabulate/digital-basket)
 
 Website for taking fixed-price donations.
 
-## Notes
+Notes
+-----
 
 Stripe takes a per-transaction fee of 1.4% + 20p (at the time of this writing, 2018-12-03).
 
